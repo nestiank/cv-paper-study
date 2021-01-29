@@ -4,7 +4,7 @@
 
 ### A1 (Convolutional) 2017-03
 
-> geometric matching을 위한 CNN의 가장 간단한 논문
+> geometric matching을 위한 CNN의 가장 간단한 paper
 
 이미지를 각각 shared weights VGG16으로 feature extraction하고 conv 2회에 fc를 붙여 matching한 다음 L2 normalization한 결과를 6D affine warp parameters로 간주한다. 그리고 나서 이걸 affine regression해서 얻은 affine transformation으로 warp한 source와 원본 target을 가지고 다시 feature extraction과 matching을 돌린 다음 그 결과를 thin plate spline regression해서 새로 geometric transformation parameters를 얻은 다음 이 최종 결과를 GT geometric transformation parameters와 비교해서 backpropagation한다.
 
@@ -26,7 +26,7 @@ UNet을 사용하는 것을 통해 affine이나 TPS를 사용하지 않는다.
 
 ### A3 (Spatial) 2015-06
 
-> geometric matching의 세 단계 모델을 제시하는 가장 기초적인 논문
+> geometric matching의 세 단계 모델을 제시하는 가장 기초적인 paper
 
 먼저 localization network로 임의의 CNN에 이미지를 넣고 돌린 다음 fc를 통해 spatial transformation parameters를 뽑아낸다. 그걸 grid generator에 넣으면 해당 spatial transformation을 기존 이미지의 사이즈에 적용했을 때 각 pixel들이 어디로 가야 하는지를 알려 주는 새로운 grid 대응 map이 나온다. 그러면 그걸 가지고 sampler가 필요한 pixels만 sampling을 하면 sparse affine transformation이 적용되고 필요한 부분만 crop되어 그 결과가 정돈된 attended part를 추출할 수 있다.
 
@@ -37,7 +37,7 @@ CNN을 개선하고 싶을 때 임의의 위치에 넣을 수 있어 parallel co
 
 ### A4 (Learning) 2019-03
 
-> CycleGAN의 cycle-consistency를 time과 같은 frame을 기준으로 도입하여 correspondence를 확인할 때 더 robust하도록 만든 논문
+> CycleGAN의 cycle-consistency를 time과 같은 frame을 기준으로 도입하여 correspondence를 확인할 때 더 robust하도록 만든 paper
 
 새로운 frame의 patch와 기존 frame image를 각각 ResNet50을 이용하여 1/8 * 1/8 크기로 feature extraction하고 이걸 product해서 affine matrix를 얻는다. 그리고 이걸 conv 2번과 fc를 돌려서 6D affine transformation parameters로 정리한다. 그리고 그 결과를 새로운 기존 frame image의 feature extraction 결과에 적용해서 affine transformation한다. 그러면 그게 기존 frame에서 해당 patch의 위치를 찾은 다음 해당 patch와 같게 affine transformation한 것이다.
 
@@ -57,23 +57,51 @@ textureless images의 경우 그냥 벽과 같이 별 내용이 없는 부분은
 
 ### A6 (Semantic) 2019-04
 
-> 형태는 target으로 보내고 style은 source로 보내는 양방향 동기화를 제안한 논문
+> 형태는 target으로 보내고 style은 source로 보내는 양방향 동기화를 제안한 paper
 
 일단 deep features 기법을 이용해서 feature extraction을 한다. 그러면 source 쪽에서는 attribute transfered feature가 나오고 target 쪽에서는 warped target feature가 나온다. 먼저 semantic matching의 측면에서 이 둘의 correlation map을 구한 것을 encoder-decoder에 넣고 6D affine 또는 thin spline transformation field를 구한다. 그리고 attribute transfer의 측면에서 이 둘을 target 쪽에 confidence를 적용하여 blending한 것을 CNN에 넣고 돌리면 target의 feature가 extract되어 source 쪽에 transfer된 image가 나온다. 그리고 아까 구한 affine transformation map을 이 image에 적용하면 target의 style에 source의 형태를 적용한 것이 나온다. 그런데 이렇게만 하면 원본과 너무 멀어질 수 있으므로 attribute transfer network 쪽에는 binary random variable을 도입하여 직전의 결과를 그대로 내놓는 skip connection을 높은 확률로 적용한다.
 
   * weights shared in feature extraction
+  * self-supervised
   * PCK 87%
 
 ### A7 (Universal) 2016-06
 
-> semantic matching과 geometric matching을 한꺼번에 할 수 있는 모델
+> semantic matching과 geometric matching을 한꺼번에 할 수 있는 model
 
 미리 images 자체에 label이 붙어 있고 images 안의 keypoint들에 annotation이 다 붙어 있는 dataset을 집어넣고 먼저 dense하게 FCNN을 돌린다. 그리고 나서 각각의 keypoint들에 대해서 정해진 kernel size k에 맞게 k * k patch를 잘라내서 각각 [A3]을 돌린다. 그렇게 해서 얻은 새로운 k * k patch들의 모음은 기존 이미지와 비교하면 patch size가 k배인데, stride k로 convolution해서 배율을 맞춘다. 그리고 나서 images 간에 같은 keypoint끼리의 거리는 최소화하고, 다른 keypoint끼리의 거리는 최소한 m의 margin이 있도록 loss function을 설정하여 backpropagation한다. 그러면 label과 함께 학습했기 때문에 semantic estimation이 가능하면서도, 모르는 image에 keypoint들을 설정해서 target image와 함께 주고 돌리면 target image에서 해당 keypoint와 semantic의 관점에서 같은 keypoint들의 위치를 찾아준다.
 
+  * fully supervised
   * PCK very high
 
 ### A8 (DGC-Net) 2018-10
 
->
+> robust geometric correspondence network in strong geometric transformations
 
+현실에서는 아주 다른 각도에서 보는 homography나 약간 다른 위치에서 보는 affine 그리고 이와 비슷하게 thin plate spline 변환보다 훨씬 심하게 사진이 다를 수 있기 때문에 이런 상황에서도 여전히 correspondence map을 구성하려면 deep 그리고 dense한 network를 구성해야 할 것이다. 먼저 source 그리고 target image를 Siamese VGG16에 넣는다. 그렇게 해서 얻은 source 그리고 target feature vector를 가지고 먼저 coarse layer에서 correlation map을 구한다. 이것은 두 feature vector의 scalar product로 구할 수 있다. 그리고 이것을 5 layer의 CNN으로 구성된 correspondence map decoder에 넣는다. 그러면 그게 그 layer의 correspondence map이 된다. 그리고 나서는 먼저 source 그리고 target feature vector와 위의 layer에서 얻은 correspondence map을 bilinear upsampler에 넣어서 2 * 2 upsample한다. 그리고 source feature vector를 correspondence map대로 warp한다. 그리고 그 결과와 target feature vector 그리고 correspondence map을 모두 더한다. 그리고 그것을 해당 layer의 새로운 correspondence map으로 사용한다. 그렇게 해서 전체 5 layer pyramid 구조를 만든다. 마지막 layer에 사용한 두 feature vector와 마지막 layer에서 나온 correspondence map을 concatenate하여 4 layer CNN으로 이루어진 matchability decoder에 넣으면 matchability map을 얻는다. loss로는 matchability map에서 BLE loss를 얻고 GT correspondence map과 model에서 얻은 correspondence map의 L1 distance를 match에 관한 binary mask를 곱해서 원소별로 다 더한 다음 confidence를 곱하는 일을 layer마다 해서 모두 더한 loss를 얻은 다음 둘을 가중합한 것을 사용한다. 마지막 layer에서 더 풍부한 convolution 결과를 활용하기 위해 correspondence map decoder에 layer 3부터 dilation을 주면 좋다.
 
+모델이 복잡하지만 pyramid 구조의 이점을 살리면서 CNN도 있고 warp도 하고 matchability map도 loss로 활용하면서 correspondence map도 loss로 활용하기 때문에 dense geometric correspondence network에서 train에 활용할 수 있는 거의 모든 것을 다 활용하는 모델이라고 할 수 있다.
+
+  * self-supervised
+  * PCK varies
+
+### A9 (GLU-Net) 2019-12
+
+> geometric, semantic 그리고 optical flow 문제를 단일 weights로 해결하는 universal model
+
+일단 VGG16으로 feature extraction을 두 번 한다. 그리고 resolution을 줄인 원본 image로도 두 번 한다. 줄인 image로 두 번 해서 나온 결과는 줄인 image의 feature vector이다. 이걸 가지고 일단 global correlation map을 만든다. 이때 cyclic consistency를 적용한다. 그리고 나서 이것을 correspondence map decoder에 집어넣고 거기서 원래 feature vector를 뺀다. 그리고 이걸 scale 2 deconvolution한다. 이걸로 줄인 이미지로 한 번 feature extraction한 결과 중에서 source feature vector를 warp하고, 그 결과와 target feature vector로 구한 local correspondence map을 correspondence map decoder에 집어넣을 때 scale 2 deconvolution한 것을 같이 넣어서 돌린다. 그리고 그 결과에 또 deconvolution 결과를 집어넣는다. 그리고 거기에다가 decoder의 결과를 refine network에 집어넣은 것을 더한다. 앞의 layer들도 비슷하다. 이렇게 text로 정리한 것을 다시 보는 것보다 paper의 figure 3을 직접 보는 것이 훨씬 빠를 것이다.
+
+중요한 점은 resolution을 줄인 것을 dense하게 feature extraction한 것을 가지고 global correlation map을 구할 수 있고, 그리고 그 아래 layer들에서 위의 layer에서 계산한 map을 이용해서 local correlation map을 구할 수 있기에 global 그리고 local correlation을 모두 고려할 수 있다는 것이다.
+
+모델이 굉장히 복잡하지만 image를 crop하는 일이 없기 때문에 더 이상 어차피 sparse하게 작업할 것이라고 중요한 정보가 어디 있는지도 모르는데 마구 crop하는 일이 없어서 정보의 손실을 막을 수 있다. resolution을 바꾸는 것은 dense한 처리를 위해서는 필수적이고 dense한 image 처리는 warp하기 전에 image를 가지고 correspondence map을 만드는 것을 의미한다.
+
+  * self-supervised
+  * PCK varies
+
+#### Quick Notes
+
+  * Geometric matching: image A에 나오는 것을 다른 각도에서 찍은 사진이 image B인데, 같은 물체를 sparse하게 찾아내서 image A를 warp하여 image B처럼 geometric transformation해라.
+  * Semantic matching: image A에 나오는 것과 비슷한 것을 다른 배경에서 찍은 사진이 image B인데, 같은 물체를 sparse하게 찾아내서 그 물체의 형상을 기준으로 image A를 warp하여 image B처럼 geometric transformation해라.
+  * Optical flow: video와 같이 images의 시계열 data가 주어지면 이것을 frame별로 쪼갠 다음 frame들을 dense하게 서로 비교해서 frame마다 image 속의 모든 것들이 어떻게 움직였는지를 frame A를 warp하여 frame B처럼 geometric transformation해서 보여라.
+
+[Daily Breakpoint @ 2021-01-29 Fri]

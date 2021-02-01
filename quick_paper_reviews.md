@@ -104,4 +104,34 @@ textureless images의 경우 그냥 벽과 같이 별 내용이 없는 부분은
   * Semantic matching: image A에 나오는 것과 비슷한 것을 다른 배경에서 찍은 사진이 image B인데, 같은 물체를 sparse하게 찾아내서 그 물체의 형상을 기준으로 image A를 warp하여 image B처럼 geometric transformation해라.
   * Optical flow: video와 같이 images의 시계열 data가 주어지면 이것을 frame별로 쪼갠 다음 frame들을 dense하게 서로 비교해서 frame마다 image 속의 모든 것들이 어떻게 움직였는지를 frame A를 warp하여 frame B처럼 geometric transformation해서 보여라.
 
-[Daily Breakpoint @ 2021-01-29 Fri]
+## 2021-02-01 (A11-A12)
+
+### A11 (GOCor) 2020-09
+
+> 별도의 dense convolution 없이도 global weights를 고려해서 estimation을 진행하는 모델
+
+correspondence map에 penalization weights를 곱해서 맞는 cell은 강하게 하고 틀린 cell은 약하게 한 다음 이것의 LSE와 correspondence map을 4D convolution한 결과의 LSE 그리고 correspondence map의 제곱을 적절히 가중합한 것을 loss로 사용하여 정확도와 smoothness를 올리고 regularization을 강화한다.
+
+모듈로 끼워넣을 수 있고 간단한데 성능이 좋아서 최근에서야 나온 이유에 의문이 생기게 된다.
+
+  * Fully supervised
+  * PCK very high
+
+### A12 (Correspondence) 2020-03
+
+> dense annotation 없이도 dense correlation map을 만들어서 sparse estimation을 보다 global하게 진행하는 모델
+
+source와 target을 각각 feature extraction한 다음 3 * 3 크기로 벡터들을 뽑아서 9개의 cosine distance를 구한다. 그리고 이것을 길이가 9인 벡터로 만들어서 W * H * 9 크기의 행렬을 만든다. 그리고 이것을 2번 2D convolution하여 3개의 행렬을 만들어서 모두 concatenation한다. 그리고 나서 source와 target의 feature map에 대해 cosine correlation을 구하고 source와 target의 feature map을 앞에서 말한 대로 조작한 것에 대해 cosine correlation을 구한 다음 이 둘의 transpose matrix까지 해서 넷을 각각 non-isotropic 4D convolution layers인 adaptive neighbourhood consensus filter에 넣어서 refine하고 그 결과를 sum한다. 그리고 나서 soft mutual NN filtering과 softmax를 진행한다.
+
+  * fully supervised
+  * PCK very high
+
+## 2021-02-02 (A13-A14)
+
+### A13 (Semantic) 2020-06
+
+>
+
+//
+
+  *

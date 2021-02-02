@@ -21,7 +21,7 @@
 UNet을 사용하는 것을 통해 affine이나 TPS를 사용하지 않는다.
 
   * weights not shared in feature extraction
-  * fully self-supervised
+  * self-supervised
   * PCK 77%
 
 ### A3 (Spatial) 2015-06
@@ -32,7 +32,7 @@ UNet을 사용하는 것을 통해 affine이나 TPS를 사용하지 않는다.
 
 CNN을 개선하고 싶을 때 임의의 위치에 넣을 수 있어 parallel computation을 방해하지 않고, mixed images disentangling에 사용할 수 있다.
 
-  * fully self-supervised
+  * self-supervised
   * PCK 84%
 
 ### A4 (Learning) 2019-03
@@ -52,7 +52,7 @@ textureless images의 경우 그냥 벽과 같이 별 내용이 없는 부분은
 
 어떤 transformation이 적용되었는지는 따로 찾아줘야 한다.
 
-  * fully self-supervised
+  * self-supervised
   * PCK 78%
 
 ### A6 (Semantic) 2019-04
@@ -130,8 +130,21 @@ source와 target을 각각 feature extraction한 다음 3 * 3 크기로 벡터�
 
 ### A13 (Semantic) 2020-06
 
+> semantic correspondence를 사용해서 semantic matching 문제를 optimal transport 문제로 바꾸는 논문
+
+source와 target을 각각 feature extraction한 다음 가장 좋은 layers를 모아서 features를 구성하고 cosine correlation을 사용해서 correlation map을 만든 다음 M = 1 - C로 M을 만든다. feature extraction에서의 가장 마지막 layer를 GAP 돌리고 FC에 넣고 staircase function으로 정리하고 softmax에 넣고 argmax로 가장 잘 들어맞는 class를 찾는다. 그리고 방금 찾은 class를 가지고 feature extraction에서의 가장 마지막 layer와 FC의 weights를 곱해서 W * H CAM을 만든다. 이걸 row와 column을 기준으로 평균을 내고 이것을 사용해서 T의 후보들을 구한 다음 T * M이 최소인 T star를 구한다. 이때 negative entropic regularizer를 사용한다. 그리고 미리 설정한 offset에 비해서 각 annotated pixels가 얼마나 움직였는지를 Gaussian mask로 변환해 둔다. 이것과 T star를 Hough space matching confidence 공식에 집어넣고 돌리면 matching confidence를 얻을 수 있는데 여기에 argmax를 사용하면 어떤 pixel pair가 가장 유망한지 알 수 있고 따라서 어떤 annotated source pixel에 대해서 가장 잘 match되는 target pixel을 찾을 수 있다.
+
+Hough space에 대해 처음 들어봐서 굉장히 복잡하고 어려웠는데 이걸 도입하는 것이 computation 관점에서 매우 유리할 것 같긴 하다는 생각이 들었다.
+
+  * self-supervised
+  * PCK varies
+
+### A14 (Cross-domain) 2020-04
+
 >
 
 //
 
   *
+
+## 2021-02-03

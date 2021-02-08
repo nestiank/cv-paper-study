@@ -3,7 +3,7 @@
 ### 강의
 
   * [x] [CS229: Machine Learning](http://cs229.stanford.edu)
-  * [ ] [CS231N: Convolutional Neural Networks for Vision Recognition](http://cs231n.stanford.edu)
+  * [x] [CS231N: Convolutional Neural Networks for Vision Recognition](http://cs231n.stanford.edu)
   * [ ] [CSCI1430: Introduction to Computer Vision](https://cs.brown.edu/courses/csci1430)
   * [x] [COSE474: Deep Learning](https://www.youtube.com/watch?v=cQdV3pl4IoY&list=PLCNc54m6eBRWr4ffnhXtdp6lw5SJrLmp8)
 

@@ -100,9 +100,9 @@ textureless images의 경우 그냥 벽과 같이 별 내용이 없는 부분은
 
 #### Quick Notes
 
-  * Geometric matching: image A에 나오는 것을 다른 각도에서 찍은 사진이 image B인데, 같은 물체를 sparse하게 찾아내서 image A를 warp하여 image B처럼 geometric transformation해라.
-  * Semantic matching: image A에 나오는 것과 비슷한 것을 다른 배경에서 찍은 사진이 image B인데, 같은 물체를 sparse하게 찾아내서 그 물체의 형상을 기준으로 image A를 warp하여 image B처럼 geometric transformation해라.
-  * Optical flow: video와 같이 images의 시계열 data가 주어지면 이것을 frame별로 쪼갠 다음 frame들을 dense하게 서로 비교해서 frame마다 image 속의 모든 것들이 어떻게 움직였는지를 frame A를 warp하여 frame B처럼 geometric transformation해서 보여라.
+  * Geometric Matching: Image A에 나오는 것을 다른 각도에서 찍은 사진이 image B인데, 같은 물체를 sparse하게 찾아내서 image A를 warp하여 image B처럼 geometric transformation을 해라.
+  * Semantic Matching: Image A에 나오는 것과 비슷한 것을 다른 배경에서 찍은 사진이 image B인데, 비슷한 물체를 sparse하게 찾아내서 image A를 warp하여 image B처럼 geometric transformation을 해라.
+  * Optical Flow: Video와 같이 image들의 시계열 data가 주어지면 이것을 frame별로 쪼갠 다음 frame들을 dense하게 서로 비교해서 frame마다 image 속의 물체들이 어떻게 움직였는지를 frame A를 warp하여 frame B처럼 geometric transformation을 해서 보여라.
 
 ## 2021-02-01 (A11-A12)
 
@@ -138,13 +138,3 @@ Hough space에 대해 처음 들어봐서 굉장히 복잡하고 어려웠는데
 
   * self-supervised
   * PCK varies
-
-### A14 (Cross-domain) 2020-04
-
->
-
-//
-
-  *
-
-## 2021-02-03

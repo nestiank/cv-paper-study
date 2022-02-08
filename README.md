@@ -5,7 +5,7 @@
 [![institution-korea-university][korea-university-image]][korea-university-cs-url]
 ![project-urp][project-urp]
 
-> 컴퓨터 비전 분야 연구에 도움이 되는 중요한 논문들을 읽고 공부한 기록입니다.
+> 컴퓨터 비전 분야의 주요 논문들을 읽고 공부한 기록입니다.
 
 ### 학습 기간
 
